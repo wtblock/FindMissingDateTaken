@@ -15,6 +15,8 @@
 CWinApp theApp;
 
 /////////////////////////////////////////////////////////////////////////////
+// returns true if the given ASCII date ID is found. Supported IDs are
+// PropertyTagExifDTOrig and PropertyTagExifDTDigitized.
 bool GetDateFound( Gdiplus::Image* pImage, PROPID id )
 {
 	bool value = false;
@@ -26,7 +28,8 @@ bool GetDateFound( Gdiplus::Image* pImage, PROPID id )
 	if ( uiSize > 0 )
 	{
 		// using a smart pointer which will release itself
-		// when it goes out of context
+		// when it goes out of context to allocate space
+		// for the property item
 		unique_ptr<Gdiplus::PropertyItem> pItem =
 			unique_ptr<Gdiplus::PropertyItem>
 			(
@@ -34,14 +37,12 @@ bool GetDateFound( Gdiplus::Image* pImage, PROPID id )
 			);
 
 		// Get the property item.
-		pImage->GetPropertyItem
-		(
-			PropertyTagExifDTOrig, uiSize, pItem.get()
-		);
+		pImage->GetPropertyItem( id, uiSize, pItem.get() );
 
 		// the property should be ASCII
 		if ( pItem->type == PropertyTagTypeASCII )
 		{
+			const CString csDate = (LPCSTR)pItem->value;
 			value = true;
 		}
 	}
@@ -50,7 +51,7 @@ bool GetDateFound( Gdiplus::Image* pImage, PROPID id )
 } // GetDateFound
 
 /////////////////////////////////////////////////////////////////////////////
-// crawl through the directory tree
+// crawl through the directory tree looking for valid image extensions
 void RecursePath( LPCTSTR path )
 {
 	USES_CONVERSION;
