@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////
-// Copyright © by W. T. Block, all rights reserved
+// Copyright © 2020 by W. T. Block, all rights reserved
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
 
@@ -8,6 +8,8 @@
 #include <map>
 #include <memory>
 #include <gdiplus.h>
+
+// need to link to the gdiplus.lib library
 #pragma comment(lib, "gdiplus.lib")
 
 using namespace Gdiplus;
