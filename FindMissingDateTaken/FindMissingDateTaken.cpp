@@ -152,6 +152,11 @@ int _tmain( int argc, TCHAR* argv[], TCHAR* envp[] )
 		return 2;
 	}
 
+	// we are expecting two parameters on the command line and if
+	// this is not the case, present some usage information to
+	// the user. NOTE: the first parameter is the executable path,
+	// so we are only interested in the second parameter which
+	// is the pathname of the folder to be processed.
 	CStdioFile fOut( stdout );
 	if ( argc != 2 )
 	{
@@ -161,22 +166,25 @@ int _tmain( int argc, TCHAR* argv[], TCHAR* envp[] )
 			_T( "FindMissingDateTaken, Copyright (c) 2020, " )
 			_T( "by W. T. Block.\n" )
 		);
-		fOut.WriteString( _T( ".\n" ) );
-		fOut.WriteString( _T( "Usage:\n" ) );
-		fOut.WriteString( _T( ".\n" ) );
-		fOut.WriteString( _T( ".  FindMissingDateTaken pathname\n" ) );
-		fOut.WriteString( _T( ".\n" ) );
-		fOut.WriteString( _T( "Where:\n" ) );
-		fOut.WriteString( _T( ".\n" ) );
+
 		fOut.WriteString
-		(
+		( 
+			_T( ".\n" ) 
+			_T( "Usage:\n" )
+			_T( ".\n" )
+			_T( ".  FindMissingDateTaken pathname\n" )
+			_T( ".\n" )
+			_T( "Where:\n" )
+			_T( ".\n" )
 			_T( ".  pathname is the root of the tree to be scanned\n" )
+			_T( ".\n" ) 
 		);
-		fOut.WriteString( _T( ".\n" ) );
+
+		// return code three indicates incorrect number of parameters
 		return 3;
 	}
 
-	// display the executable path
+	// display the executable path (parameter zero)
 	CString csMessage;
 	csMessage.Format( _T( "Executable pathname: %s\n" ), argv[ 0 ] );
 	fOut.WriteString( _T( ".\n" ) );
@@ -184,6 +192,7 @@ int _tmain( int argc, TCHAR* argv[], TCHAR* envp[] )
 	fOut.WriteString( _T( ".\n" ) );
 
 	// retrieve the pathname and validate the pathname exists
+	// (parameter one)
 	CString csPath = argv[ 1 ];
 	if ( !::PathFileExists( csPath ) )
 	{
@@ -191,6 +200,9 @@ int _tmain( int argc, TCHAR* argv[], TCHAR* envp[] )
 		fOut.WriteString( _T( ".\n" ) );
 		fOut.WriteString( csMessage );
 		fOut.WriteString( _T( ".\n" ) );
+
+		// return code four indicates the pathname given does
+		// not exist
 		return 4;
 
 	} else
