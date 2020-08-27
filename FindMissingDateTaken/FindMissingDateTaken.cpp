@@ -33,7 +33,7 @@ bool GetDateFound( Gdiplus::Image* pImage, PROPID id )
 		unique_ptr<Gdiplus::PropertyItem> pItem =
 			unique_ptr<Gdiplus::PropertyItem>
 			(
-				(PropertyItem*)malloc( uiSize )
+				(Gdiplus::PropertyItem*)malloc( uiSize )
 			);
 
 		// Get the property item.
@@ -177,7 +177,10 @@ int _tmain( int argc, TCHAR* argv[], TCHAR* envp[] )
 			_T( "Where:\n" )
 			_T( ".\n" )
 			_T( ".  pathname is the root of the tree to be scanned\n" )
-			_T( ".\n" ) 
+			_T( ".    for image files that do not have \"Date Taken\"\n" )
+			_T( ".    metadata recorded in the file's Exchangeable\n" )
+			_T( ".    image file format (EXIF) data.\n" )
+			_T( ".\n" )
 		);
 
 		// return code three indicates incorrect number of parameters
@@ -186,10 +189,10 @@ int _tmain( int argc, TCHAR* argv[], TCHAR* envp[] )
 
 	// display the executable path (parameter zero)
 	CString csMessage;
-	csMessage.Format( _T( "Executable pathname: %s\n" ), argv[ 0 ] );
-	fOut.WriteString( _T( ".\n" ) );
-	fOut.WriteString( csMessage );
-	fOut.WriteString( _T( ".\n" ) );
+	//csMessage.Format( _T( "Executable pathname: %s\n" ), argv[ 0 ] );
+	//fOut.WriteString( _T( ".\n" ) );
+	//fOut.WriteString( csMessage );
+	//fOut.WriteString( _T( ".\n" ) );
 
 	// retrieve the pathname and validate the pathname exists
 	// (parameter one)
