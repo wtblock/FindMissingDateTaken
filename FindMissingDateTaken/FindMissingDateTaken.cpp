@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "FindMissingDateTaken.h"
+#include "CHelper.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -91,7 +92,7 @@ void RecursePath( LPCTSTR path )
 		} else // read the properties if it is a valid extension
 		{
 			const CString csPath = finder.GetFilePath();
-			const CString csExt = GetExtension( csPath ).MakeLower();
+			const CString csExt = CHelper::GetExtension( csPath ).MakeLower();
 
 			if ( -1 != csValidExt.Find( csExt ) )
 			{
@@ -152,13 +153,36 @@ int _tmain( int argc, TCHAR* argv[], TCHAR* envp[] )
 		return 2;
 	}
 
+	// do some common command line argument corrections
+	vector<CString> arrArgs = CHelper::CorrectedCommandLine( argc, argv );
+	const size_t nArgs = arrArgs.size();
+
+	CStdioFile fOut( stdout );
+	CString csMessage;
+
+	// display the number of arguments if not 1 to help the user 
+	// understand what went wrong if there is an error in the
+	// command line syntax
+	if ( nArgs != 1 )
+	{
+		fOut.WriteString( _T( ".\n" ) );
+		csMessage.Format( _T( "The number of parameters are %d\n.\n" ), nArgs - 1 );
+		fOut.WriteString( csMessage );
+
+		// display the arguments
+		for ( int i = 1; i < nArgs; i++ )
+		{
+			csMessage.Format( _T( "Parameter %d is %s\n.\n" ), i, arrArgs[ i ] );
+			fOut.WriteString( csMessage );
+		}
+	}
+
 	// we are expecting two parameters on the command line and if
 	// this is not the case, present some usage information to
 	// the user. NOTE: the first parameter is the executable path,
 	// so we are only interested in the second parameter which
 	// is the pathname of the folder to be processed.
-	CStdioFile fOut( stdout );
-	if ( argc != 2 )
+	if ( nArgs != 2 )
 	{
 		fOut.WriteString( _T( ".\n" ) );
 		fOut.WriteString
@@ -188,15 +212,14 @@ int _tmain( int argc, TCHAR* argv[], TCHAR* envp[] )
 	}
 
 	// display the executable path (parameter zero)
-	CString csMessage;
-	//csMessage.Format( _T( "Executable pathname: %s\n" ), argv[ 0 ] );
+	//csMessage.Format( _T( "Executable pathname: %s\n" ), arrArgs[ 0 ] );
 	//fOut.WriteString( _T( ".\n" ) );
 	//fOut.WriteString( csMessage );
 	//fOut.WriteString( _T( ".\n" ) );
 
 	// retrieve the pathname and validate the pathname exists
 	// (parameter one)
-	CString csPath = argv[ 1 ];
+	CString csPath = arrArgs[ 1 ];
 	if ( !::PathFileExists( csPath ) )
 	{
 		csMessage.Format( _T( "Invalid pathname: %s\n" ), csPath );

@@ -20,22 +20,6 @@ using namespace std;
 ULONG_PTR m_gdiplusToken;
 
 /////////////////////////////////////////////////////////////////////////////
-// parse the extension from a pathname
-static inline CString GetExtension( LPCTSTR pcszPath )
-{
-	CString csPath( pcszPath );
-	TCHAR* pBuf = csPath.GetBuffer( csPath.GetLength() + 1 );
-	TCHAR szDrive[ _MAX_DRIVE ];
-	TCHAR szDir[ _MAX_DIR ];
-	TCHAR szFile[ _MAX_FNAME ];
-	TCHAR szExt[ _MAX_EXT ];
-
-	_tsplitpath( pBuf, szDrive, szDir, szFile, szExt );
-	csPath.ReleaseBuffer();
-	return szExt;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 // initialize GDI+
 bool InitGdiplus()
 {
